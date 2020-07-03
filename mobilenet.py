@@ -17,7 +17,7 @@ def MobileNet(input_shape=[224,224,3],
 
     img_input = Input(shape=input_shape)
 
-    # 224,224,3 -> 112,112,32  
+    # 224,224,3 -> 112,112,32
     x = _conv_block(img_input, 32, strides=(2, 2))
     # 112,112,32 -> 112,112,64
     x = _depthwise_conv_block(x, 64, depth_multiplier, block_id=1)
@@ -35,7 +35,6 @@ def MobileNet(input_shape=[224,224,3],
                               strides=(2, 2), block_id=4)
     # 28,28,256 -> 28,28,256
     x = _depthwise_conv_block(x, 256, depth_multiplier, block_id=5)
-    
 
     # 28,28,256 -> 14,14,512
     x = _depthwise_conv_block(x, 512, depth_multiplier,
@@ -52,7 +51,7 @@ def MobileNet(input_shape=[224,224,3],
                               strides=(2, 2), block_id=12)
     x = _depthwise_conv_block(x, 1024, depth_multiplier, block_id=13)
 
-    # 7,7,1024 -> 1,1,1024
+    # 7,7,1024 -> 1,1,1024,使用平均池化代替全连接层，平均池化相当于没有参数
     x = GlobalAveragePooling2D()(x)
     x = Reshape((1, 1, 1024), name='reshape_1')(x)
     x = Dropout(dropout, name='dropout')(x)
@@ -64,8 +63,8 @@ def MobileNet(input_shape=[224,224,3],
     inputs = img_input
 
     model = Model(inputs, x, name='mobilenet_1_0_224_tf')
-    model_name = 'mobilenet_1_0_224_tf.h5'
-    model.load_weights(model_name)
+    # model_name = 'mobilenet_1_0_224_tf.h5'
+    # model.load_weights(model_name)
 
     return model
 
@@ -118,6 +117,8 @@ if __name__ == '__main__':
     weights_path = get_file(model_name,
                             weigh_path,
                             cache_subdir='models')
+    # model_name = 'mobilenet_1_0_224_tf.h5'
+    model.load_weights(weights_path)
     img_path = 'elephant.jpg'
     img = image.load_img(img_path, target_size=(224, 224))
     x = image.img_to_array(img)

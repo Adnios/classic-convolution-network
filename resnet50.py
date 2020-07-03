@@ -1,4 +1,3 @@
-
 from __future__ import print_function
 
 import numpy as np
@@ -126,14 +125,14 @@ def ResNet50(input_shape=[224,224,3],classes=1000):
 
 if __name__ == '__main__':
     model = ResNet50()
-    # ~/.keras/models
+    # 默认地址~/.keras/models
     weights_path = get_file('resnet50_weights_tf_dim_ordering_tf_kernels.h5',
                                     WEIGHTS_PATH,
                                     cache_subdir='models',
                                     md5_hash='a7b3fe01876f51b976af0dea6bc144eb')
     model.load_weights(weights_path,by_name=True)
 
-    model.summary()
+    # model.summary()
     img_path = 'elephant.jpg'
     img = image.load_img(img_path, target_size=(224, 224))
     x = image.img_to_array(img)

@@ -44,7 +44,7 @@ def VGG16(num_classes):
     # 7,7,512
     x = Conv2D(512,(3,3),activation = 'relu',padding = 'same', name = 'block5_conv1')(x)
     x = Conv2D(512,(3,3),activation = 'relu',padding = 'same', name = 'block5_conv2')(x)
-    x = Conv2D(512,(3,3),activation = 'relu',padding = 'same', name = 'block5_conv3')(x)    
+    x = Conv2D(512,(3,3),activation = 'relu',padding = 'same', name = 'block5_conv3')(x)
     x = MaxPooling2D((2,2),strides = (2,2),name = 'block5_pool')(x)
     # 提取特征
 
@@ -68,7 +68,11 @@ if __name__ == '__main__':
     img_path = 'elephant.jpg'
     img = image.load_img(img_path, target_size=(224, 224))
     x = image.img_to_array(img)
+    # (224, 224, 3)
+    print(x.shape)
     x = np.expand_dims(x, axis=0)
+    # (1, 224, 224, 3)
+    print(x.shape)
     x = preprocess_input(x)
     print('Input image shape:', x.shape)
 
