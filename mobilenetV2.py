@@ -19,7 +19,7 @@ BASE_WEIGHT_PATH = ('https://github.com/JonathanCMitchell/mobilenet_v2_keras/'
 # relu6！
 def relu6(x):
     return K.relu(x, max_value=6)
-    
+
 # 用于计算padding的大小
 def correct_pad(inputs, kernel_size):
     img_dim = 1
@@ -48,7 +48,7 @@ def _make_divisible(v, divisor, min_value=None):
     return new_v
 
 
-
+# alpha=1.0表示忽略这个参数，alpha表示对MobileNet的扩张
 def MobileNetV2(input_shape=[224,224,3],
                 alpha=1.0,
                 include_top=True,
@@ -61,6 +61,7 @@ def MobileNetV2(input_shape=[224,224,3],
     # stem部分
     # 224,224,3 -> 112,112,32
     first_block_filters = _make_divisible(32 * alpha, 8)
+    # ZeroPadding2D目的使经过Conv2D后正好变为1/2
     x = ZeroPadding2D(padding=correct_pad(img_input, 3),
                              name='Conv1_pad')(img_input)
     x = Conv2D(first_block_filters,
@@ -75,6 +76,7 @@ def MobileNetV2(input_shape=[224,224,3],
     x = Activation(relu6, name='Conv1_relu')(x)
 
     # 112,112,32 -> 112,112,16
+    # 残差结构块
     x = _inverted_res_block(x, filters=16, alpha=alpha, stride=1,
                             expansion=1, block_id=0)
 
@@ -136,8 +138,9 @@ def MobileNetV2(input_shape=[224,224,3],
                                   name='Conv_1_bn')(x)
     x = Activation(relu6, name='out_relu')(x)
 
-    # 7,7,1280 -> 1,1,1280
+    # 7,7,1280 -> 1,1,1280，平均池化
     x = GlobalAveragePooling2D()(x)
+    # 全连接层
     x = Dense(classes, activation='softmax',
                         use_bias=True, name='Logits')(x)
 
@@ -155,7 +158,7 @@ def _inverted_res_block(inputs, expansion, stride, alpha, filters, block_id):
     x = inputs
     prefix = 'block_{}_'.format(block_id)
 
-    # part1 数据扩张
+    # part1 数据扩张，1*1卷积升维
     if block_id:
         # Expand
         x = Conv2D(expansion * in_channels,
@@ -174,8 +177,8 @@ def _inverted_res_block(inputs, expansion, stride, alpha, filters, block_id):
     if stride == 2:
         x = ZeroPadding2D(padding=correct_pad(x, 3),
                                  name=prefix + 'pad')(x)
-    
-    # part2 可分离卷积
+
+    # part2 可分离卷积，3*3卷积
     x = DepthwiseConv2D(kernel_size=3,
                                strides=stride,
                                activation=None,
@@ -200,6 +203,7 @@ def _inverted_res_block(inputs, expansion, stride, alpha, filters, block_id):
                                   momentum=0.999,
                                   name=prefix + 'project_BN')(x)
 
+    # 残差相加
     if in_channels == pointwise_filters and stride == 1:
         return Add(name=prefix + 'add')([inputs, x])
     return x
@@ -217,7 +221,7 @@ if __name__ == '__main__':
     weight_path = BASE_WEIGHT_PATH + model_name
     weights_path = get_file(model_name, weight_path, cache_subdir='models')
     model.load_weights(weights_path)
-    
+
     img_path = 'elephant.jpg'
     img = image.load_img(img_path, target_size=(224, 224))
     x = image.img_to_array(img)
