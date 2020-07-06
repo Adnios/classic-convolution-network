@@ -41,6 +41,7 @@ def Xception(input_shape = [299,299,3],classes=1000):
     residual = Conv2D(128, (1, 1), strides=(2, 2), padding='same', use_bias=False)(x)
     residual = BatchNormalization()(residual)
 
+    # 先经过1*1的卷积，在这儿
     x = SeparableConv2D(128, (3, 3), padding='same', use_bias=False, name='block2_sepconv1')(x)
     x = BatchNormalization(name='block2_sepconv1_bn')(x)
     x = Activation('relu', name='block2_sepconv2_act')(x)

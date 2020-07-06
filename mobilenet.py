@@ -1,5 +1,6 @@
 import warnings
 import numpy as np
+# warnings.filterwarnings("ignore")
 
 from keras.preprocessing import image
 from keras.models import Model
@@ -129,3 +130,4 @@ if __name__ == '__main__':
     preds = model.predict(x)
     print(np.argmax(preds))
     print('Predicted:', decode_predictions(preds, 1))
+    model.summary()

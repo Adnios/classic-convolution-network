@@ -6,6 +6,7 @@ from __future__ import print_function
 import os
 import math
 import tensorflow as tf
+from tensorflow.keras import backend
 import numpy as np
 from keras import layers
 from keras.models import Model

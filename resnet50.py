@@ -16,7 +16,8 @@ from keras.applications.imagenet_utils import preprocess_input
 
 WEIGHTS_PATH = 'https://github.com/fchollet/deep-learning-models/releases/download/v0.2/resnet50_weights_tf_dim_ordering_tf_kernels.h5'
 
-
+# identity_block和conv_block区别在于第二条路径有无卷积
+# identity_block的输入和输出维度相同
 def identity_block(input_tensor, kernel_size, filters, stage, block):
 
     filters1, filters2, filters3 = filters
@@ -41,6 +42,7 @@ def identity_block(input_tensor, kernel_size, filters, stage, block):
     return x
 
 
+# conv_block输入和输出维度不同
 def conv_block(input_tensor, kernel_size, filters, stage, block, strides=(2, 2)):
 
     # 64,64,256

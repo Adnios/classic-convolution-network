@@ -165,7 +165,8 @@ if __name__ == '__main__':
     model = InceptionResNetV2()
     fname = 'inception_resnet_v2_weights_tf_dim_ordering_tf_kernels.h5'
     weights_path = get_file(fname,BASE_WEIGHT_URL + fname,cache_subdir='models',file_hash='e693bd0210a403b3192acc6073ad2e96')
-    model.load_weights("inception_resnet_v2_weights_tf_dim_ordering_tf_kernels.h5")
+    print(weights_path)
+    model.load_weights(weights_path)
     img_path = 'elephant.jpg'
     img = image.load_img(img_path, target_size=(299, 299))
     x = image.img_to_array(img)

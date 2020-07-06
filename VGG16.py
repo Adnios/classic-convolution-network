@@ -78,3 +78,5 @@ if __name__ == '__main__':
 
     preds = model.predict(x)
     print('Predicted:', decode_predictions(preds))
+    pre = decode_predictions(preds)
+    print(pre[0][0][1])
