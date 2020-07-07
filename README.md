@@ -217,7 +217,7 @@
 
 下来过来直接运行即可，会自动下载模型，如果连接失败，可以多试几次。
 
-![原图 Before](/elephant.jpg)
+![原图 Before](./elephant.jpg)
 
 ### Reference
 - [https://github.com/fchollet/deep-learning-models](https://github.com/fchollet/deep-learning-models)
