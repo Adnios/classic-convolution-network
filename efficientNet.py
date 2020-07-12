@@ -1,7 +1,6 @@
-
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
+# from __future__ import absolute_import
+# from __future__ import division
+# from __future__ import print_function
 
 import os
 import math
@@ -106,7 +105,7 @@ def block(inputs, activation_fn=tf.nn.swish, drop_rate=0., name='',
     filters = filters_in * expand_ratio
 
     # 利用Inverted residuals
-    # part1 1x1升维度
+    # part1 1x1升维度 expect the 1st conv, the others' expand_ratio>1
     if expand_ratio != 1:
         x = layers.Conv2D(filters, 1,
                           padding='same',
@@ -119,6 +118,7 @@ def block(inputs, activation_fn=tf.nn.swish, drop_rate=0., name='',
         x = inputs
 
     # padding
+    # correct_pad?
     if strides == 2:
         x = layers.ZeroPadding2D(padding=correct_pad(x, kernel_size),
                                  name=name + 'dwconv_pad')(x)
@@ -188,11 +188,11 @@ def EfficientNet(width_coefficient,
                  classes=1000,
                  **kwargs):
 
-    input_shape = [416,416,3]
+    input_shape = [224,224,3]
     img_input = layers.Input(tensor=input_tensor, shape=input_shape)
 
 
-    bn_axis = 3 
+    bn_axis = 3
 
     # 保证filter的大小可以被8整除
     def round_filters(filters, divisor=depth_divisor):
@@ -402,7 +402,7 @@ def preprocess_input(x):
 
 if __name__ == '__main__':
     model = EfficientNetB0()
-    model.summary()
+    # model.summary()
     img_path = 'elephant.jpg'
     img = image.load_img(img_path, target_size=(224, 224))
     x = image.img_to_array(img)
