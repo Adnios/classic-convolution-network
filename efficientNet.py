@@ -151,6 +151,7 @@ def block(inputs, activation_fn=tf.nn.swish, drop_rate=0., name='',
                            activation='sigmoid',
                            kernel_initializer=CONV_KERNEL_INITIALIZER,
                            name=name + 'se_expand')(se)
+        # 元素积
         x = layers.multiply([x, se], name=name + 'se_excite')
 
     # part3 利用1x1对特征层进行压缩
