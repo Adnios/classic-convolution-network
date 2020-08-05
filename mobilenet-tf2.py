@@ -50,6 +50,7 @@ def MobileNet(input_shape=[224, 224, 3],
     x = _depthwise_conv_block(x, 512, depth_multiplier, block_id=10)
     x = _depthwise_conv_block(x, 512, depth_multiplier, block_id=11)
 
+
     # 14,14,512 -> 7,7,1024
     x = _depthwise_conv_block(x, 1024, depth_multiplier,
                               strides=(2, 2), block_id=12)
